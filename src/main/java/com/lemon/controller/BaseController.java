@@ -35,18 +35,16 @@ public class BaseController {
 
 
 
-    @RequestMapping(value = "/" ,method = RequestMethod.GET)
+    @RequestMapping(value = "/json" ,method = RequestMethod.GET)
     public String welcome(ModelMap model) throws SQLException {
         String sql_temp="select * from wordnet.user_login";
         // JSON格式数据解析对象
         JSONObject json_obj = new JSONObject();
-        Connection conn=null;
-        PreparedStatement pst =  null;
-        ResultSet rs =null;
+
         try{
-            conn= DatabaseConnection.getInitConn().getConnection();
-            pst=conn.prepareStatement(sql_temp);
-            rs=pst.executeQuery();
+            Connection conn= DatabaseConnection.getInitConn().getConnection();
+            PreparedStatement pst=conn.prepareStatement(sql_temp);
+            ResultSet rs=pst.executeQuery();
             //create Json here.Data
             System.out.println(rs.next());
             Map<String, String> map1 = new HashMap<String, String>();
@@ -57,6 +55,7 @@ public class BaseController {
             // 将Map转换为JSONArray数据
             JSONArray ja1 = JSONArray.fromObject(map1);
             json_obj.put("user_login",ja1);
+
             conn.close();
         }catch(Exception e){
             e.printStackTrace();
@@ -68,11 +67,12 @@ public class BaseController {
         return VIEW_INDEX;//返回index.jsp
     }
 
-//    @RequestMapping(value = "/{name}" ,method = RequestMethod.GET)
-//    public String welcome(@PathVariable String name , ModelMap model){
-//        model.addAttribute("message","Welcome "+name);
-//        model.addAttribute("counter",++counter);
-//        logger.debug("[Welcome counter :{}",counter);
-//        return VIEW_INDEX;//返回index.jsp
+    @RequestMapping(value = "/" ,method = RequestMethod.GET)
+    public String welcome(){
+        return "login";//返回login.jsp
+    }
+//    @RequestMapping(value = "/register" ,method = RequestMethod.GET)
+//    public String register(){
+//        return "register";//返回register.jsp
 //    }
 }
